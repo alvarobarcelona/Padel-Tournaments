@@ -4,7 +4,7 @@ import MatchCard from './MatchCard';
 import Standings from './Standings';
 import { List, RefreshCw, Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
 
-export default function TournamentView({ mode, initialPlayers, pointsPerMatch, onExit }) {
+export default function TournamentView({ mode, initialPlayers, pointsPerMatch, onExit, onFinish, courtNames }) {
     // History: Array of round objects { roundNum, matches, playersSnapshot }
     const [history, setHistory] = useState([]);
     const [currentRoundNum, setCurrentRoundNum] = useState(1);
@@ -221,15 +221,29 @@ export default function TournamentView({ mode, initialPlayers, pointsPerMatch, o
                         match={m}
                         onScoreChange={handleScoreChange}
                         maxPoints={pointsPerMatch}
+                        courtName={courtNames ? courtNames[m.court] : null}
                     />
                 ))}
             </div>
 
             {/* Actions */}
             {viewRoundNum === currentRoundNum && (
-                <div style={{ marginTop: '2rem' }}>
+                <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <button className="btn-primary" onClick={finishRound}>
-                        Finish Round & Next
+                        Next Round
+                    </button>
+                    <button 
+                        onClick={() => onFinish(players)}
+                        style={{ 
+                            background: 'transparent', 
+                            border: '1px solid var(--border)', 
+                            color: 'var(--text-muted)',
+                            padding: '0.8rem',
+                            borderRadius: 'var(--radius)',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Finish Tournament
                     </button>
                 </div>
             )}

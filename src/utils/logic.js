@@ -23,6 +23,9 @@ export const generateAmericanoRound = (players, matchHistory = []) => {
     // Simple greedy pairing for MVP
     // In a full implementation, we would use a graph weight algorithm to minimize repeats
 
+    let courtIndex = 0;
+    const courtCount = Math.floor(players.length / 4);
+
     while (available.length >= 4) {
         const p1 = available.pop();
         const p2 = available.pop();
@@ -31,12 +34,14 @@ export const generateAmericanoRound = (players, matchHistory = []) => {
 
         matches.push({
             id: crypto.randomUUID(),
+            court: (courtIndex % courtCount) + 1,
             team1: [p1, p2],
             team2: [p3, p4],
             score1: 0,
             score2: 0,
             completed: false
         });
+        courtIndex++;
     }
 
     // Handle leftovers (bye) - For MVP we assume multiple of 4 or handle in UI

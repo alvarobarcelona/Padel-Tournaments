@@ -1,6 +1,6 @@
 import { Minus, Plus } from 'lucide-react';
 
-export default function MatchCard({ match, onScoreChange, maxPoints }) {
+export default function MatchCard({ match, onScoreChange, maxPoints, courtName }) {
 
     const handleSliderChange = (e) => {
         const val = Number(e.target.value);
@@ -22,7 +22,7 @@ export default function MatchCard({ match, onScoreChange, maxPoints }) {
                     fontSize: '0.8rem',
                     fontWeight: 'bold'
                 }}>
-                    Court {match.court}
+                    {courtName || `Court ${match.court}`}
                 </div>
             )}
 

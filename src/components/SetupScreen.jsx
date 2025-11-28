@@ -6,6 +6,7 @@ export default function SetupScreen({ onStart }) {
     const [playerInput, setPlayerInput] = useState('');
     const [players, setPlayers] = useState([]);
     const [pointsPerMatch, setPointsPerMatch] = useState(24);
+    const [courtNames, setCourtNames] = useState({});
 
     const addPlayer = () => {
         if (!playerInput.trim()) return;
@@ -19,6 +20,10 @@ export default function SetupScreen({ onStart }) {
 
     const removePlayer = (id) => {
         setPlayers(players.filter(p => p.id !== id));
+    };
+
+    const handleCourtNameChange = (index, name) => {
+        setCourtNames({ ...courtNames, [index + 1]: name });
     };
 
     const canStart = players.length >= 4 && players.length % 4 === 0;
@@ -149,11 +154,31 @@ export default function SetupScreen({ onStart }) {
                 </div>
             </div>
 
+            {/* Court Naming */}
+            {canStart && (
+                <div style={{ marginBottom: '2rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)' }}>
+                        Court Names
+                    </label>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                        {Array.from({ length: Math.floor(players.length / 4) }).map((_, i) => (
+                            <input
+                                key={i}
+                                className="input-field"
+                                placeholder={`Court ${i + 1}`}
+                                value={courtNames[i + 1] || ''}
+                                onChange={(e) => handleCourtNameChange(i, e.target.value)}
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Start Button */}
             <button
                 className="btn-primary"
                 disabled={!canStart}
-                onClick={() => onStart(mode, players, pointsPerMatch)}
+                onClick={() => onStart(mode, players, pointsPerMatch, courtNames)}
                 style={{ opacity: canStart ? 1 : 0.5, cursor: canStart ? 'pointer' : 'not-allowed' }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
