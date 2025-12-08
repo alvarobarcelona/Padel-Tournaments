@@ -4,6 +4,7 @@ import MatchCard from "./MatchCard";
 import Standings from "./Standings";
 import RoundResults from "./RoundResults";
 import { Trophy, ChevronLeft, ChevronRight } from "lucide-react";
+import { ConfirmModal } from "./ConfirmModal";
 
 export default function TournamentView({
   mode,
@@ -193,6 +194,9 @@ export default function TournamentView({
 
   const isViewingCurrentRound = viewRoundNum === currentRoundNum;
 
+  const [showExitModal, setShowExitModal] = useState(false);
+  const [showFinishModal, setShowFinishModal] = useState(false);
+
   return (
     <div className="container" style={{ paddingBottom: "80px" }}>
       {/* Header */}
@@ -210,15 +214,28 @@ export default function TournamentView({
         }}
       >
         <button
-          onClick={onExit}
+          onClick={() => setShowExitModal(true)}
           style={{
             background: "none",
             border: "none",
             color: "var(--text-muted)",
+            cursor: "pointer",
           }}
         >
           Exit
         </button>
+
+        <ConfirmModal
+          open={showExitModal}
+          title="Salir del Torneo"
+          message="¿Estás seguro de que quieres salir? Perderás el progreso no guardado."
+          onCancel={() => setShowExitModal(false)}
+          onConfirm={() => {
+            setShowExitModal(false);
+            onExit();
+          }}
+        />
+
         <div style={{ textAlign: "center" }}>
           <h2 style={{ color: "var(--primary)" }}>Round {viewRoundNum}</h2>
           <span
@@ -289,19 +306,6 @@ export default function TournamentView({
         </button>
       </div>
 
-      {/* Show all previous rounds when viewing current round */}
-      {isViewingCurrentRound &&
-        history.map((round) => (
-          <div key={round.roundNum} style={{ marginBottom: "2rem" }}>
-            <RoundResults
-              roundNum={round.roundNum}
-              matches={round.matches}
-              pointsPerMatch={pointsPerMatch}
-              courtNames={courtNames}
-            />
-          </div>
-        ))}
-
       {/* Current/Editing round header */}
       {isViewingCurrentRound && (
         <div
@@ -341,6 +345,7 @@ export default function TournamentView({
         <div
           style={{
             marginTop: "2rem",
+            marginBottom: "2rem",
             display: "flex",
             flexDirection: "column",
             gap: "1rem",
@@ -349,8 +354,9 @@ export default function TournamentView({
           <button className="btn-primary" onClick={finishRound}>
             Next Round
           </button>
+
           <button
-            onClick={() => onFinish(players, history)}
+            onClick={() => setShowFinishModal(true)}
             style={{
               background: "transparent",
               border: "1px solid var(--border)",
@@ -362,8 +368,32 @@ export default function TournamentView({
           >
             Finish Tournament
           </button>
+
+          <ConfirmModal
+            open={showFinishModal}
+            title="Finalizar Torneo"
+            message="¿Seguro que quieres finalizar el torneo? Esta acción no se puede deshacer."
+            onCancel={() => setShowFinishModal(false)}
+            onConfirm={() => {
+              setShowFinishModal(false);
+              onFinish(players, history);
+            }}
+          />
         </div>
       )}
+
+      {/* Show all previous rounds when viewing current round */}
+      {isViewingCurrentRound &&
+        history.map((round) => (
+          <div key={round.roundNum} style={{ marginBottom: "2rem" }}>
+            <RoundResults
+              roundNum={round.roundNum}
+              matches={round.matches}
+              pointsPerMatch={pointsPerMatch}
+              courtNames={courtNames}
+            />
+          </div>
+        ))}
 
       {viewRoundNum !== currentRoundNum && (
         <div
