@@ -26,6 +26,7 @@ export default function TournamentView({
 
   // Initialize first round
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
     startRound(1, initialPlayers);
   }, []);
 

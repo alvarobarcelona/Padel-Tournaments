@@ -91,6 +91,7 @@ function App() {
             <h1>Padel Tournament</h1>
             <p style={{ color: "var(--text-muted)" }}>
               Americano & Mexicano Manager
+              <div>By Alvaro Barcelona Peralta</div>
             </p>
           </header>
 
